@@ -30,6 +30,7 @@ class ProductManager {
             return 0
     }
 
+    //23-11 Modificar para buscar el ultimo ID y sumarle 1
     getProductID = () => {
         return (this.products.length + 1)
     }
