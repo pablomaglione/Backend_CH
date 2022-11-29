@@ -1,12 +1,30 @@
+const fs = require("fs");
+
 class ProductManager {
 
-    constructor () {
-        this.products = []
+    constructor (path) {
+        this.path = path;
+        this.init();
     }
 
-    addProduct = (title, description, price, thumbail, code, stock) => {
-        const product = {
-            id: this.getProductID(),
+    init() {
+        try {
+          const existFile = fs.existsSync(this.path);
+          if (existFile) return;
+    
+          // Si no existe, ya lo inicializamos con un array vacio
+          fs.writeFileSync(this.path, JSON.stringify([]));
+        } catch (error) {
+          console.log(error);
+        }
+      }
+
+    async addProduct ({title, description, price, thumbail, code, stock}){
+        if (!title || !description || !price || !thumbail || !code || !stock){
+            return { error: "Completar todos los campos, son obligatorios" };
+        }
+        const newProduct = {
+            id: await this.getProductID(),
             title,
             description,
             price,
@@ -14,52 +32,128 @@ class ProductManager {
             code,
             stock,
         }
-        const codeDuplicated = (prod) => (prod.code == product.code); //Busca si el code ya existe, si no existe carga el producto
+        const products = await this.getProducts();
+    
+        const codeDuplicated = (prod) => (prod.code == newProduct.code); //Busca si el code ya existe, si no existe carga el producto
+        
+        if (!products.some(codeDuplicated)){
+            products.id = this.getProductID();
 
-        if (!this.products.some(codeDuplicated)){
-            this.products.push(product)
+            products.push(newProduct)
+
+            await fs.promises.writeFile(this.path, JSON.stringify(products, null, 3));
+
+            return newProduct;
+
         } else {
-            console.log("Codigo duplicado")
+            return{ error: "Codigo Duplicado" };
         }
     }
 
-    getProducts = () => {
-        if(this.products.length > 0)
-            return this.products
+    async getProducts() {
+        try{
+            const resp = await fs.promises.readFile(this.path, "UTF-8");
+            
+            return JSON.parse(resp)        
+        }catch (error){
+            console.log(error)
+        }
+    }
+
+    async getProductID (){
+        try{
+            const products = await this.getProducts();
+            let ID;
+            if(!products.length)
+                ID = products.length + 1;
+            else
+                ID = products[products.length - 1].id + 1;
+            return (ID)
+        }catch (error){
+            console.log(error)
+        }
+    }
+
+    async getProductByID (productid) {
+        const products = await this.getProducts();
+        const prod = products.find(p => p.id == productid)
+
+        if(prod)
+            return prod;
         else
-            return 0
+            return {error: "No existe producto con ese ID"}
     }
 
-    //23-11 Modificar para buscar el ultimo ID y sumarle 1
-    getProductID = () => {
-        return (this.products.length + 1)
-    }
+    async updateProduct(productid, updProd){
+        try{
+            let products = await this.getProducts();
+            const prod = products.findIndex(p => p.id == productid)
 
-    getProductByID = (productid) => {
-        const prod = this.products.find(p => p.id == productid)
-        
-        if(prod){
-            console.log(prod)}
-        else{
-            console.log("Not Found")}
+            products[prod] = {...products[prod], ...updProd}
+            await fs.promises.writeFile(this.path, JSON.stringify(products, null, 3));
+            
+            return products
+        }catch(error){
+            console.log(error)}
+    }   
+
+    async deleteProduct(productid){
+        try{
+            let products = await this.getProducts();
+            const prod = products.filter(p => p.id != productid)
+            
+            await fs.promises.writeFile(this.path, JSON.stringify(prod, null, 3));
+            
+            return prod
+        }catch(error){
+            console.log(error)}
     }
 }
-
-
 //TEST
-const product = new ProductManager()
+const products = new ProductManager('./ProductManager.json')
+const test = async () => {
 
-console.log("Products: ", product.getProducts()) // Imprime todos los productos cargados o 0 sin no hay ninguno
+    //Carga de productos
+    const prod = await products.addProduct({
+        title:"titulo", 
+        description:"descrip", 
+        price: 100,
+        thumbail: "foto", 
+        code: 5, 
+        stock: 10});
 
+    const prod1 = await products.addProduct({
+        title:"titulo1", 
+        description:"descrip", 
+        price: 100,
+        thumbail: "foto", 
+        code: 6, 
+        stock: 10});
+    
+    const prod2 = await products.addProduct({
+        title:"titulo3", 
+        description:"descrip3", 
+        price: 1050,
+        thumbail: "foto6", 
+        code: 9, 
+        stock: 10});
+ 
+    //console.log(await products.getProducts()); // Imprime todos los productos cargados o [] sin no hay ninguno
+    //console.log(await products.getProductByID(1)); // Imprime el producto del ID pasado
+    
+    // ====== Producto a modificar, se pasa el ID del mismo y los datos nuevos
+    
+    /*const updProd = await products.updateProduct(2, {
+        title:"tituloNew", 
+        description:"descripX", 
+        thumbail: "fotoNueva", 
+        stock: 10});
+        */
+    //console.log(await products.getProducts()) // Imprime todos los productos cargados y modificados o [] sin no hay ninguno
+    //console.log(await products.deleteProduct(2)) // Elimina el producto con ID pasado e imprime los productos
+}
 
-product.addProduct("titulo", "descrip", 100, "foto", 5, 10)
-product.addProduct("titulo2", "descrip2", 200, "foto", 6, 11)
-product.addProduct("titulo3", "descrip2", 200, "foto", 1, 11)
-
-console.log("Products: ", product.getProducts()) //Imprime todos los productos cargados
-
-product.getProductByID(5) // ID no exite
-product.getProductByID(2) // Imprime el producto con ID 2
+test();
 
 
 
