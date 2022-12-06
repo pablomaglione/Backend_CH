@@ -77,7 +77,7 @@ export class ProductManager {
 
     async getProductByID (productid) {
         const products = await this.getProducts();
-        const prod = products.find(p => p.id == productid)
+        const prod = products.find(p => p.id === productid)
 
         if(prod)
             return prod;
