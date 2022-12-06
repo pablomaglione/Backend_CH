@@ -1,0 +1,19 @@
+[{
+        "id": 1,
+        "title": "titulo",
+        "description": "descrip",
+        "price": 100,
+        "thumbail": "foto",
+        "code": 5,
+        "stock": 10
+    },
+    {
+        "id": 2,
+        "title": "titulo2",
+        "description": "descrip2",
+        "price": 100,
+        "thumbail": "foto",
+        "code": 7,
+        "stock": 10
+    }
+]

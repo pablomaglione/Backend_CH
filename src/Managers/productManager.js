@@ -1,6 +1,7 @@
-const fs = require("fs");
+//const fs = require("fs");
+import fs from "fs";
 
-class ProductManager {
+export class ProductManager {
 
     constructor (path) {
         this.path = path;
@@ -109,7 +110,9 @@ class ProductManager {
             console.log(error)}
     }
 }
+
 //TEST
+/*
 const products = new ProductManager('./ProductManager.json')
 const test = async () => {
 
@@ -151,9 +154,9 @@ const test = async () => {
         */
     //console.log(await products.getProducts()) // Imprime todos los productos cargados y modificados o [] sin no hay ninguno
     //console.log(await products.deleteProduct(2)) // Elimina el producto con ID pasado e imprime los productos
-}
+/*}
 
 test();
-
+*/
 
 
