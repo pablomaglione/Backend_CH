@@ -1,55 +1,79 @@
-[{
-        "id": 1,
-        "title": "titulo",
-        "description": "descrip",
-        "price": 100,
-        "thumbail": "foto",
-        "code": 5,
-        "stock": 10
-    },
-    {
-        "id": 2,
-        "title": "titulo2",
-        "description": "descrip2",
-        "price": 100,
-        "thumbail": "foto",
-        "code": 7,
-        "stock": 10
-    },
-    {
-        "id": 3,
-        "title": "titulo3",
-        "description": "descrip3",
-        "price": 100,
-        "thumbail": "foto",
-        "code": 7,
-        "stock": 10
-    },
-    {
-        "id": 4,
-        "title": "titulo4",
-        "description": "descrip4",
-        "price": 100,
-        "thumbail": "foto",
-        "code": 7,
-        "stock": 10
-    },
-    {
-        "id": 5,
-        "title": "titulo5",
-        "description": "descrip5",
-        "price": 100,
-        "thumbail": "foto",
-        "code": 7,
-        "stock": 10
-    },
-    {
-        "id": 6,
-        "title": "titulo6",
-        "description": "descrip6",
-        "price": 100,
-        "thumbail": "foto",
-        "code": 7,
-        "stock": 10
-    }
+[
+   {
+      "id": 1,
+      "title": "titulo15",
+      "description": "descrip15",
+      "price": 100,
+      "thumbail": "foto",
+      "code": 13,
+      "stock": 10
+   },
+   {
+      "id": 3,
+      "title": "titulo3",
+      "description": "descrip3",
+      "price": 100,
+      "thumbail": "foto",
+      "code": 7,
+      "stock": 10
+   },
+   {
+      "id": 4,
+      "title": "titulo4",
+      "description": "descrip4",
+      "price": 100,
+      "thumbail": "foto",
+      "code": 7,
+      "stock": 10
+   },
+   {
+      "id": 6,
+      "title": "titulo6",
+      "description": "descrip6",
+      "price": 100,
+      "thumbail": "foto",
+      "code": 7,
+      "stock": 10
+   },
+   {
+      "id": 7,
+      "title": "titulo10",
+      "description": "descrip10",
+      "price": 100,
+      "thumbail": "foto",
+      "code": 11,
+      "stock": 10,
+      "category": "prod1"
+   },
+   {
+      "id": 8,
+      "title": "titulo15",
+      "description": "descrip15",
+      "price": 100,
+      "thumbail": "foto",
+      "code": 15,
+      "stock": 10,
+      "category": "prod1"
+   },
+   {
+      "id": 9,
+      "title": "titulo15",
+      "description": "descrip15",
+      "price": 100,
+      "thumbail": "foto",
+      "code": 12,
+      "stock": 10,
+      "category": "prod1"
+   },
+   {
+      "id": 10,
+      "title": "titulo15",
+      "description": "descrip15",
+      "price": 100,
+      "thumbail": "foto",
+      "code": 14,
+      "status": "true",
+      "stock": 55,
+      "category": "prod15"
+   }
 ]
