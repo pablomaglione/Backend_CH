@@ -105,7 +105,7 @@ export class CartManager {
             return prod;
         else
             return {
-                error: "No existe producto con ese ID"
+                error: "No existe Carrito con ese ID"
             }
     }
 }
