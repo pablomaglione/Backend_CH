@@ -96,4 +96,4 @@ routerCart.post("/:cid/products/:pid", async (req, res) => {
     }
 });
 
-export default routerCart;
+export { routerCart as cartsRouter };
