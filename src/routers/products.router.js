@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { productManager } from "../dao/Managers/index.js";
+import { productDBManager } from "../dao/Managers/index.js";
 
 const router = Router();
 
@@ -7,7 +7,7 @@ router.get("/", async (req, res) => {
   try {
     const { limit } = req.query;
 
-    const allProducts = await productManager.getProducts();
+    const allProducts = await productDBManager.getProducts();
 
     if (!limit || limit < 1) {
       return res.send({ success: true, products: allProducts });
@@ -35,7 +35,7 @@ router.get("/:id", async (req, res) => {
       });
     }
 
-    const product = await productManager.getProductByID(id);
+    const product = await productDBManager.getProductByID(id);
 
     if (!product) {
       return res.send({ success: false, error: "Producto no encontrado" });
@@ -65,7 +65,7 @@ router.post("/", async (req, res) => {
         return res.send({success: false, error: "Completar todos los campos, son obligatorios"});
     }
 
-    const addProduct = await productManager.addProduct({
+    const addProduct = await productDBManager.addProduct({
       title,
       description,
       price,
@@ -78,7 +78,7 @@ router.post("/", async (req, res) => {
 
     req.app
       .get("io")
-      .sockets.emit("products", await productManager.getProducts());
+      .sockets.emit("products", await productDBManager.getProducts());
 
     res.send({ success: true, product: addProduct });
   } catch (error) {
@@ -110,7 +110,7 @@ router.put("/:id", async (req, res) => {
       category,
     } = req.body;
 
-    const updateProduct = await productManager.updateProduct(id, {
+    const updateProduct = await productDBManager.updateProduct(id, {
       title,
       description,
       price,
@@ -140,7 +140,7 @@ router.delete("/:id", async (req, res) => {
       });
     }
 
-    const deleteProduct = await productManager.deleteProduct(id);
+    const deleteProduct = await productDBManager.deleteProduct(id);
 
     res.send({ success: true, deleted: deleteProduct });
   } catch (error) {

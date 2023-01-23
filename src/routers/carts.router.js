@@ -1,11 +1,11 @@
 import { Router } from "express";
-import { cartManager } from '../dao/Managers/index.js'
+import { cartDBManager } from '../dao/Managers/index.js'
 
 const routerCart = Router();
 
 routerCart.post('/', async (req, res) => {
     try {
-        const addCart = await cartManager.createCart();
+        const addCart = await cartDBManager.createCart();
         res.send({
             success: true,
             productCart: addCart
@@ -14,6 +14,15 @@ routerCart.post('/', async (req, res) => {
         console.log(error);
     }
 });
+
+routerCart.get ('/', async (req, res) => {
+    const carts = await cartDBManager.getCarts()
+
+    res.send({
+        success: true,
+        carts
+    });
+})
 
 routerCart.get('/:cid', async (req, res) => {
     try {
@@ -30,7 +39,7 @@ routerCart.get('/:cid', async (req, res) => {
             })
         }
 
-        const cart = await cartManager.getCartByID(id);
+        const cart = await cartDBManager.getCartByID(id);
 
         if (!cart) {
             return res.send({
@@ -80,7 +89,7 @@ routerCart.post("/:cid/products/:pid", async (req, res) => {
             });
         }
 
-        const productAddedCart = await cartManager.addProductCart(cid, pid);
+        const productAddedCart = await cartDBManager.addProductCart(cid, pid);
 
         res.send({
             succes: true,

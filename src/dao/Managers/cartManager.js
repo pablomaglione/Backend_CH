@@ -1,5 +1,5 @@
 import fs from "fs";
-import { productManager } from '../Managers/index.js';
+import { productManager } from './index_FS.js';
 
 export class CartManager {
 
