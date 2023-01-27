@@ -54,9 +54,20 @@ export class ProductDBManager {
     }
   }
 
-  async getProducts() {
+  async getProducts(filter, query) {
     try {
-      const products = await productModel.find();
+      const search = {};
+      if (query) {
+        search["$or"] = [
+          { code: { $regex: query } },
+          { title: { $regex: query } },
+          { category: { $regex: query } },
+        ];
+        const products = await productModel.paginate(search, filter);
+        return products;
+      }
+
+      const products = await productModel.paginate({}, filter);
 
       return products;
     } catch (error) {

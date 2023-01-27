@@ -1,0 +1,28 @@
+
+
+<main>
+  <div class="cart_container">
+    <h1>Productos en el carrito:</h1>
+    {{#each cart}}
+      <div class="cart_products">
+        <div class="product_card">
+          <img src={{this.product.thumbnail}} alt="product__image" />
+          <div class="product__card--info">
+            <p>{{this.product.title}}</p>
+            <p>${{this.product.price}}</p>
+            <p>x{{this.quantity}}</p>
+          </div>
+        </div>
+        <button class="cart_deleteBtn" id="cart__product--deleteBtn" value={{this.product._id}}>Eliminar</button>
+      </div>
+    {{/each}}
+    <div class="cart_total">
+      <h2>Total:</h2>
+      <div class="cart__menu">
+        <button class="cart__total--btn">vaciar carrito</button>
+        <button class="cart__total--btn">Comprar</button>
+      </div>
+    </div>
+  </div>
+</main>
+<script src="/js/cart.js"></script>

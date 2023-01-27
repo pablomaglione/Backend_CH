@@ -38,15 +38,15 @@ export class CartDBManager {
     }
   }
 
-  async getCarts (){
-    const carts = await cartModel.find()
+  async getCarts() {
+    const carts = await cartModel.find();
 
-    if(carts)
-    {return carts;}
-    else{
-        return {
-            error: "No existen Carritos",
-          };
+    if (carts) {
+      return carts;
+    } else {
+      return {
+        error: "No existen Carritos",
+      };
     }
   }
 
@@ -58,5 +58,93 @@ export class CartDBManager {
       return {
         error: "No existe Carrito con ese ID",
       };
+  }
+
+  async deleteProductFromCart(cid, pid) {
+    try {
+      const deleteOne = await cartModel.updateOne(
+        { _id: cid },
+        {
+          $pull: {
+            cart: { product: pid },
+          },
+        }
+      );
+
+      return deleteOne;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async arrayProducts(cid, products) {
+    try {
+      const product = products.map((product) => {
+        return { product: product._id };
+      });
+
+      const result = await cartModel.updateOne(
+        { _id: cid },
+        {
+          $push: {
+            cart: { $each: product },
+          },
+        }
+      );
+
+      return result;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async updateQuantity(quantity, cid, pid) {
+    try {
+      const Cart = await cartModel.findById({
+        _id: cid,
+      });
+
+      if (!Cart) {
+        throw new NotFoundError("Carrito no encontrado");
+      }
+
+      const upgradeQuantity = await cartModel.updateOne(
+        {
+          "cart.product": pid,
+        },
+        {
+          $inc: {
+            "cart.$.quantity": quantity,
+          },
+        }
+      );
+
+      if (!upgradeQuantity) {
+        throw new NotFoundError("Producto no encontrado ne le carrito");
+      }
+
+      return upgradeQuantity;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async emptyCart(cid) {
+    try {
+      const emptyCart = await cartModel.updateOne(
+        {
+          _id: cid,
+        },
+        {
+          $set: {
+            cart: [],
+          },
+        }
+      );
+
+      return emptyCart;
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

@@ -7,7 +7,9 @@
       <th>Producto</th>
       <th>Descripcion</th>
       <th>Precio</th>
+      <th>Stock</th>
       <th>Imagen</th>
+      <th>Categoria</th>
     </tr>
     {{#if products.length}}
       {{#each products}}
@@ -16,7 +18,9 @@
           <th>{{this.title}}</th>
           <th>{{this.description}}</th>
           <th>{{this.price}}</th>
+          <th>{{this.stock}}</th>
           <th><img height="50px" width="50px" src={{this.thumbnail}} /></th>
+          <th>{{this.category}}</th>
         </tr>
       {{/each}}
     {{/if}}

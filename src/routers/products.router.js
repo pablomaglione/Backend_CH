@@ -5,19 +5,34 @@ const router = Router();
 
 router.get("/", async (req, res) => {
   try {
-    const { limit } = req.query;
+    const { page, limit, sort, query } = req.query;
 
-    const allProducts = await productDBManager.getProducts();
+    const filter = {
+      page: page || 1,
+      limit: limit || 10,
+      sort: { price: sort || -1 },
+      lean: true,
+    };
 
-    if (!limit || limit < 1) {
-      return res.send({ success: true, products: allProducts });
-    }
+    const products = await productDBManager.getProducts(filter, query);
 
-    const products = allProducts.slice(0, limit);
-
-    res.send({ success: true, products });
+    res.send({
+      status: "Success",
+      payload: products.docs,
+      totalPages: products.totalPages,
+      prevPage: products.prevPage,
+      nextPage: products.nextPage,
+      page: products.page,
+      hasPrevPage: products.hasPrevPage,
+      hasNextPage: products.hasNextPage,
+      prevLink: products.hasPrevPage
+        ? `/api/products?page=${products.prevPage}`
+        : null,
+      nextLink: products.hasNextPage
+        ? `/api/products?page=${products.nextPage}`
+        : null,
+    });
   } catch (error) {
-    console.log(error);
     res.send({ success: false, error: "Ha ocurrido un error" });
   }
 });
@@ -61,8 +76,19 @@ router.post("/", async (req, res) => {
       category,
     } = req.body;
 
-    if (!title || !description || !price || !code || !status || !stock || !category){
-        return res.send({success: false, error: "Completar todos los campos, son obligatorios"});
+    if (
+      !title ||
+      !description ||
+      !price ||
+      !code ||
+      !status ||
+      !stock ||
+      !category
+    ) {
+      return res.send({
+        success: false,
+        error: "Completar todos los campos, son obligatorios",
+      });
     }
 
     const addProduct = await productDBManager.addProduct({
