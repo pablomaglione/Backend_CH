@@ -4,16 +4,16 @@ import { productDBManager } from "../dao/Managers/index.js";
 
 const router = Router();
 
-router.get("/", async (req, res) => {
+/*router.get("/", async (req, res) => {
   const products = await productDBManager.getProducts();
 
   res.render('home', {products} );
-});
+});*/
 
-router.get("/products", async (req, res) => {
+router.get("/api/products", async (req, res) => {
   try {
     const { page, limit, sort } = req.query;
-    const query = req.query?.query || req.body?.query || "";
+    const query = req.query?.query || "";
 
     const filter = {
       page: page || 1,
@@ -46,11 +46,11 @@ router.get("/products", async (req, res) => {
   }
 });
 
-router.get('/products/:pid', async (req, res) => {
+router.get('/api/products/:pid', async (req, res) => {
   try {
     const { pid } = req.params;
 
-    const product = await productDBManager.getProductById(pid);
+    const product = await productDBManager.getProductByID(pid);
 
     res.render("products", {
       product,
@@ -64,7 +64,7 @@ router.get('/products/:pid', async (req, res) => {
   }
 })
 
-router.get("/carts/:cid", async (req, res) => {
+router.get("/api/carts/:cid", async (req, res) => {
   try {
     const { cid } = req.params;
 

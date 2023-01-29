@@ -36,7 +36,7 @@ export class ProductDBManager {
         category,
       };
 
-      const existCode = await productModel.findOne({ code: code });
+      const existCode = await productModel.findOne({ code: code }).lean();
       if (existCode) {
         return {
           error: "Codigo existe, debe ser diferente",
