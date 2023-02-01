@@ -1,13 +1,29 @@
-<main>
-  <div class="container">
-    <div>
-      <h3>{{this.title}}</h3>
-      <p>{{this.description}}</p>
-      <h3>${{this.price}}</h3>
-      <button id="addProduct__btn" value={{product._id}} >Agregar al carrito</button>
-    </div>
-    <div>
-      <img height="50px" width="50px" src={{this.thumbnail}}>
-    </div>
-  </div>
-</main>
+<div>
+  <h1 class="title">Lista de Productos</h1>
+
+  <table class="prod-list">
+    <tr>
+      <th>Codigo</th>
+      <th>Producto</th>
+      <th>Descripcion</th>
+      <th>Precio</th>
+      <th>Stock</th>
+      <th>Imagen</th>
+      <th>Categoria</th>
+    </tr>
+    {{#if products.length}}
+      {{#each products}}
+        <tr>
+          <th>{{this.code}}</th>
+          <th>{{this.title}}</th>
+          <th>{{this.description}}</th>
+          <th>{{this.price}}</th>
+          <th>{{this.stock}}</th>
+          <th><img height="50px" width="50px" src={{this.thumbnail}}></th>
+          <th>{{this.category}}</th>
+          <th><button class="item-cart_btn" id="buy_product__btn" value={{this._id}}>Add to Cart</button></th>
+        </tr>
+      {{/each}}
+    {{/if}}
+  </table>
+</div>

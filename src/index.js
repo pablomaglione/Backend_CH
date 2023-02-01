@@ -28,10 +28,10 @@ app.use(express.urlencoded({ extended: true }));
 
 app.set("io", io);
 
-app.use('/', ViewsRouter)
 app.use('/api/products/', productsRouter);
 app.use('/api/carts/', cartsRouter);
 app.use("/messages", messagesRouter);
+app.use('/', ViewsRouter)
 
 //Conexion a DB Mongo Atlas
 const MONGO_URL = 'mongodb+srv://user01:Us3r2023@ecommerce.yrj8xfb.mongodb.net/?retryWrites=true&w=majority'

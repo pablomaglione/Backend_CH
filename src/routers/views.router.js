@@ -4,13 +4,13 @@ import { productDBManager } from "../dao/Managers/index.js";
 
 const router = Router();
 
-/*router.get("/", async (req, res) => {
+router.get("/", async (req, res) => {
   const products = await productDBManager.getProducts();
 
-  res.render('home', {products} );
-});*/
+  res.render('home');
+});
 
-router.get("/api/products", async (req, res) => {
+router.get("/products", async (req, res) => {
   try {
     const { page, limit, sort } = req.query;
     const query = req.query?.query || "";
@@ -37,16 +37,16 @@ router.get("/api/products", async (req, res) => {
 
     result.isValid = !(page <= 0 || page > result.totalPages);
 
-    res.render("home", {
+    res.render("products", {
       result,
-      query: query,
+      products: result.docs,
     });
   } catch (error) {
     res.send({ success: false, error: "Ha ocurrido un error" });
   }
 });
 
-router.get('/api/products/:pid', async (req, res) => {
+router.get('/products/:pid', async (req, res) => {
   try {
     const { pid } = req.params;
 
@@ -64,7 +64,27 @@ router.get('/api/products/:pid', async (req, res) => {
   }
 })
 
-router.get("/api/carts/:cid", async (req, res) => {
+router.get("/carts", async (req, res) => {
+  try {
+    //const { cid } = req.params;
+
+    const result = await Managers.CartsManager.getCart();
+
+    const cart = result.cart;
+
+    res.render("cart", {
+      cart,
+    });
+  } catch (error) {
+    console.log(error);
+
+    res.send({
+      success: false, error: "Ha ocurrido un error"
+    });
+  }
+});
+
+router.get("/carts/:cid", async (req, res) => {
   try {
     const { cid } = req.params;
 
