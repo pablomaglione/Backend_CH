@@ -1,11 +1,11 @@
 import { Router } from "express";
-import { productDBManager } from "../dao/Managers/index.js";
+import { productDBManager, cartDBManager} from "../dao/Managers/index.js";
 //import { productModel } from "../dao/models/products.model.js";
 
 const router = Router();
 
 router.get("/", async (req, res) => {
-  const products = await productDBManager.getProducts();
+  //const products = await productDBManager.getProducts();
 
   res.render('home');
 });
@@ -68,7 +68,7 @@ router.get("/carts", async (req, res) => {
   try {
     //const { cid } = req.params;
 
-    const result = await Managers.CartsManager.getCart();
+    const result = await cartDBManager.getCarts();
 
     const cart = result.cart;
 
