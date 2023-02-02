@@ -23,6 +23,7 @@ router.get("/products", async (req, res) => {
     };
 
     const result = await productDBManager.getProducts(filter, query);
+    
 
     result.prevLink = result.hasPrevPage
       ? `/products?page=${result.prevPage}&limit=${result.limit}&query=${
@@ -34,9 +35,9 @@ router.get("/products", async (req, res) => {
           query || ""
         }&sort=${sort || -1}`
       : "";
-
+        
     result.isValid = !(page <= 0 || page > result.totalPages);
-
+       console.log(result)
     res.render("products", {
       result,
       products: result.docs,

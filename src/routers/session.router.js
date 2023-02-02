@@ -1,5 +1,5 @@
 import { Router } from "express";
-import sessionModel from "../dao/models/session.model.js";
+import userModel from "../dao/models/user.model.js";
 
 const routerSession = Router();
 
@@ -13,9 +13,8 @@ routerSession.get("/login", async (req, res) => {
 
 routerSession.post('/create', async (req, res) => {
     const userNew = req.body
-    console.log(userNew);
 
-    const user = new sessionModel(userNew);
+    const user = new userModel(userNew);
     await user.save();
 
     res.redirect('/sessions/login')
@@ -28,10 +27,10 @@ routerSession.get('/login', async (req, res) => {
 routerSession.post('/login', async(req,res)=>{
     const {email, pass} = req.body;
 
-    const user = await sessionModel.findOne({email, pass}).lean().exec()
+    const user = await userModel.findOne({email, pass}).lean().exec()
 
     if(!user){
-        return res.status(401).render('error/base', {error: 'Error en username y/o password'})
+        return res.status(401).render('errors/base', {error: 'Error en username y/o password'})
     }
 
     req.session.user = user;

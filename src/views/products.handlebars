@@ -1,6 +1,5 @@
 <div>
   <h1 class="title">Lista de Productos</h1>
-
   <table class="prod-list">
     <tr>
       <th>Codigo</th>
@@ -19,12 +18,33 @@
           <th>{{this.description}}</th>
           <th>{{this.price}}</th>
           <th>{{this.stock}}</th>
-          <th><img height="50px" width="50px" src={{this.thumbnail}}></th>
+          <th><img height="50px" width="50px" src={{this.thumbnail}} /></th>
           <th>{{this.category}}</th>
-          <th><button class="item-cart_btn" id="btn-buy-product" value={{this._id}}>Add to Cart</button></th>
+          <th><button
+              class="item-cart_btn"
+              id="btn-buy-product"
+              value={{this._id}}
+            >Agregar al Carrito</button></th>
         </tr>
       {{/each}}
+      <div class="btn-Page">
+        {{#if result.hasPrevPage}}
+            <buttom class="btn-prev" enabled="true"></buttom>
+            <a href={{result.prevLink}} class="btn-prev"><</a>
+        {{else}}
+            <buttom class="btn-prev" enabled="false"></buttom>
+        {{/if}}
+        <span href="">{{result.page}}</span>
+        {{#if result.hasNextPage}}
+            <buttom class="btn-next" enabled="true"></buttom>
+            <a href={{result.nextLink}} class="btn-next">></a>
+        {{else}}
+            <buttom class="btn-next" enabled="false"></buttom>
+        {{/if}}
+      </div>
     {{/if}}
   </table>
+
 </div>
 <script src="/js/product.js"></script>
+<script src="/js/product.js"></script>-->
