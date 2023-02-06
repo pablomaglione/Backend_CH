@@ -8,7 +8,7 @@ const deleteProduct = async (cid, pid) => {
 
     const result = await response.json();
 
-    if (result.status === "succes") {
+    if (result.status === "success") {
       alert("Producto eliminado correctamente");
     }
 

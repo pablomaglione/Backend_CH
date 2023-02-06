@@ -42,7 +42,7 @@ router.get("/:id", async (req, res) => {
     const { id: paramID } = req.params;
 
     const id = Number(paramID);
-    console.log(id);
+    //console.log(id);
     if (Number.isNaN(id) || id < 0) {
       return res.send({
         success: false,

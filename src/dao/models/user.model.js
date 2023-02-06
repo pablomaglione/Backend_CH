@@ -1,17 +1,18 @@
-import mongoose from 'mongoose'
-import mongoosePaginate from 'mongoose-paginate-v2'
+import mongoose from "mongoose";
+import mongoosePaginate from "mongoose-paginate-v2";
 
-const usersCollection = 'users'
+const usersCollection = "users";
 
 const userSchema = new mongoose.Schema({
-    first_name: String,
-    last_name: String,
-    email: String,
-    age: Number,
-    password: String
-})
+  first_name: String,
+  last_name: String,
+  email: String,
+  age: Number,
+  password: String,
+  cart: { type: mongoose.Types.ObjectId, ref: "carts" },
+});
 
-userSchema.plugin(mongoosePaginate)
-const userModel = mongoose.model(usersCollection, userSchema)
+userSchema.plugin(mongoosePaginate);
+const userModel = mongoose.model(usersCollection, userSchema);
 
 export default userModel;

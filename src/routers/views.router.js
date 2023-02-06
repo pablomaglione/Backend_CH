@@ -37,7 +37,6 @@ router.get("/products", async (req, res) => {
       : "";
         
     result.isValid = !(page <= 0 || page > result.totalPages);
-       console.log(result)
     res.render("products", {
       result,
       products: result.docs,

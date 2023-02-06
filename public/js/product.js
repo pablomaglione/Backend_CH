@@ -12,7 +12,7 @@ const addToCart = async (cid, pid) => {
 
     const result = await response.json();
 
-    if (result.status === "succes") {
+    if (result.status === "success") {
       alert("Producto agregado correctamente");
     }
   } catch (error) {
