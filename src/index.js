@@ -14,6 +14,8 @@ import { productDBManager } from "./dao/Managers/index.js";
 import mongoose from "mongoose";
 import MongoStore from "connect-mongo";
 import session from "express-session";
+import passport from "passport";
+import initializePassport from "./config/passport.config.js";
 
 const app = express();
 const MONGO_URL =
@@ -57,6 +59,10 @@ app.use(
     saveUninitialized: true,
   })
 );
+
+initializePassport()
+app.use(passport.initialize())
+app.use(passport.session())
 
 const Auth = (req, res, next) => {
   if (req.session?.user) {
