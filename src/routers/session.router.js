@@ -37,7 +37,7 @@ routerSession.post(
     //     last_name: req.session.last_name,
     //     email: req.session.email
     // };
-    req.session.user.rol = (req.user.email =='admin@pablo.com') ? 'admin' : 'user'
+    req.session.user.role = (req.user.email =='admin@pablo.com') ? 'admin' : 'user'
     //res.send({status: "Login Success", payload: req.session.user})
 
     res.redirect("/products");
@@ -66,6 +66,17 @@ routerSession.get("/logout", (req, res)=>{
         } else res.redirect('/sessions/login')
     });
 });
+
+routerSession.get("/current",(req, res) => {
+    try {
+      const user = req.session.user;
+
+  
+      res.status(200).render("sessions/user", { user });
+    } catch (error) {
+      console.log(error);
+    }
+  });
 
 
 //Login Github
