@@ -20,7 +20,7 @@ const initializePassport = () => {
             const user = await userModel.findOne({email: profile._json.email})
             if(user){
                 console.log('User already exists');
-                return done(null, user)
+                return done(null, user) // corregir y no pasar todo el user
             }
 
             const newCart = {
@@ -37,7 +37,7 @@ const initializePassport = () => {
                 cart: cart._id
             }
             const result = await userModel.create(newUser)
-            return done(null, result)
+            return done(null, result) //corregir y no pasar todo el user
         }catch (error){
             return done('Error to login with github' + error)
         }
@@ -88,7 +88,7 @@ const initializePassport = () => {
 
                 if(!isValidPassword(user, password)) return done(null, false)
 
-                return done(null, user)
+                return done(null, user) //corregir y no pasar todo el user
             } catch (error) {
                 return done(error)
             }
