@@ -1,4 +1,4 @@
-import { CartsServices } from "../services/carts.servicesjs";
+import CartServices from "../services/carts.services.js";
 
 export const createCart = async (req, res) => {
   try {
@@ -15,7 +15,7 @@ export const createCart = async (req, res) => {
 
 export const getCarts = async (req, res) => {
   try {
-    const carts = await CartsServices.getCarts();
+    const carts = await CartServices.getCarts();
 
     return res.status(200).send({
       payload: carts,
@@ -39,7 +39,7 @@ export const getCartByID = async (req, res) => {
       });
     }
 
-    const cart = await CartsServices.getCartByID(id);
+    const cart = await CartServices.getCartByID(id);
 
     if (!cart) {
       return res.status(401).send({
@@ -81,7 +81,7 @@ export const addProductCart = async (req, res) => {
       });
     }
 
-    const productAddedCart = await CartsServices.addProductCart(cid, pid);
+    const productAddedCart = await CartServices.addProductCart(cid, pid);
 
     return res.status(200).send({
       succes: true,
@@ -97,7 +97,7 @@ export const deleteProductFromCart = async (req, res) => {
     try {
         const { cid, pid } = req.params;
     
-        const result = await CartsServices.deleteProductFromCart(cid, pid);
+        const result = await CartServices.deleteProductFromCart(cid, pid);
     
         res.status(401).send({
           status: "success",
@@ -115,7 +115,7 @@ export const arrayProducts = async (req, res) => {
     
         const productToReplace = req.body;
     
-        const result = await CartsServices.arrayProducts(cid, productToReplace);
+        const result = await CartServices.arrayProducts(cid, productToReplace);
     
         res.status(200).send({
           status: "success",
@@ -132,7 +132,7 @@ export const updateQuantity = async (req, res) => {
         const { quantity } = req.body;
         const { cid, pid } = req.params;
     
-        const result = await CartsServices.updateQuantity(quantity, cid, pid);
+        const result = await CartServices.updateQuantity(quantity, cid, pid);
         res.status(200).send({
           status: "success",
           payload: result,
@@ -147,7 +147,7 @@ export const emptyCart = async (req, res) => {
     try {
         const { cid } = req.params;
     
-        const result = await CartsServices.emptyCart(cid);
+        const result = await CartServices.emptyCart(cid);
     
         res.status(200).send({
           status: "success",

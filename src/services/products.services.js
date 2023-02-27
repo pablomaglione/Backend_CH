@@ -1,4 +1,4 @@
-import { productModel } from "../models/products.model.js";
+import productModel from "../models/products.model.js";
 
 class ProductsServices {
   getProducts = async (filter, query) => {
@@ -108,6 +108,6 @@ class ProductsServices {
   };
 }
 
-const ProductsServices = ProductsServices();
+const ProductServices = new ProductsServices();
 
-export default ProductsServices;
+export default ProductServices;

@@ -1,4 +1,4 @@
-import { ProductsServices } from "../services/products.services.js";
+import  ProductServices from "../services/products.services.js";
 
 export const getProducts = async (req, res) => {
   try {
@@ -11,7 +11,7 @@ export const getProducts = async (req, res) => {
       lean: true,
     };
 
-    const products = await ProductsServices.getProducts(filter, query);
+    const products = await ProductServices.getProducts(filter, query);
 
     return res.status(200).send({
       status: "Success",
@@ -44,7 +44,7 @@ export const getProductByID = async (req, res) => {
       return res.status(401).send("ID incorrecto, deber ser un número válido");
     }
 
-    const product = await ProductsServices.getProductByID(id);
+    const product = await ProductServices.getProductByID(id);
 
     if (!product) {
       return res.status(401).send("Producto no encontrado");
@@ -84,7 +84,7 @@ export const addProduct = async (req, res) => {
         .send("Completar todos los campos, son obligatorios");
     }
 
-    const addProduct = await ProductsServices.addProduct({
+    const addProduct = await ProductServices.addProduct({
       title,
       description,
       price,
@@ -122,7 +122,7 @@ export const updateProduct = async (req, res) => {
       category,
     } = req.body;
 
-    const updateProduct = await ProductsServices.updateProduct(id, {
+    const updateProduct = await ProductServices.updateProduct(id, {
       title,
       description,
       price,
@@ -149,7 +149,7 @@ export const deleteProduct = async (req, res) => {
       return res.status(401).send("El id debe ser un número válido");
     }
 
-    const deleteProduct = await ProductsServices.deleteProduct(id);
+    const deleteProduct = await ProductServices.deleteProduct(id);
 
     return res.status(200).send({ payload: deleteProduct });
   } catch (error) {
