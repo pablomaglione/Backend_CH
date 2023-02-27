@@ -1,184 +1,23 @@
 import { Router } from "express";
-import { cartDBManager } from "../dao/Managers/index.js";
+import { addProductCart, arrayProducts, createCart, deleteProductFromCart, emptyCart, getCartByID, getCarts } from "../controllers/carts.controller.js";
+import { updateProduct } from "../controllers/products.controller.js";
 
 const routerCart = Router();
 
-routerCart.post("/", async (req, res) => {
-  try {
-    const addCart = await cartDBManager.createCart();
-    res.send({
-      success: true,
-      productCart: addCart,
-    });
-  } catch (error) {
-    console.log(error);
-  }
-});
+routerCart.post("/", createCart);
 
-routerCart.get("/", async (req, res) => {
-  const carts = await cartDBManager.getCarts();
+routerCart.get("/", getCarts);
 
-  res.send({
-    success: true,
-    carts,
-  });
-});
+routerCart.get("/:cid", getCartByID);
 
-routerCart.get("/:cid", async (req, res) => {
-  try {
-    const { cid: paramID } = req.params;
+routerCart.post("/:cid/products/:pid", addProductCart);
 
-    const id = Number(paramID);
-    console.log(id);
-    if (Number.isNaN(id) || id < 0) {
-      return res.send({
-        success: false,
-        error: "ID incorrecto, deber ser un número válido",
-      });
-    }
+routerCart.delete("/:cid/products/:pid", deleteProductFromCart);
 
-    const cart = await cartDBManager.getCartByID(id);
+routerCart.put("/:cid", arrayProducts);
 
-    if (!cart) {
-      return res.send({
-        success: false,
-        error: "Producto no encontrado",
-      });
-    }
-    res.send({
-      success: true,
-      cart,
-    });
-  } catch (error) {
-    console.log(error);
+routerCart.put("/:cid/products/:pid", updateProduct);
 
-    res.send({
-      success: false,
-      error: "ERROR",
-    });
-  }
-});
-
-routerCart.post("/:cid/products/:pid", async (req, res) => {
-  try {
-    const { cid: cartId } = req.params;
-
-    const cid = Number(cartId);
-
-    if (Number.isNaN(cid) || cid < 0) {
-      return res.send({
-        succes: false,
-        error: "El id del carrito ingresado es invalido",
-      });
-    }
-
-    const { pid: productId } = req.params;
-
-    const pid = Number(productId);
-
-    if (Number.isNaN(pid) || pid < 0) {
-      return res.send({
-        succes: false,
-        error: "El id del producto ingresado es invalido",
-      });
-    }
-
-    const productAddedCart = await cartDBManager.addProductCart(cid, pid);
-
-    res.send({
-      succes: true,
-      product: productAddedCart,
-    });
-  } catch (error) {
-    console.log(error);
-
-    res.send({
-      succes: false,
-      error: "Ocurrio un error",
-    });
-  }
-});
-
-routerCart.delete("/:cid/products/:pid", async (req, res) => {
-  try {
-    const { cid, pid } = req.params;
-
-    const result = await cartDBManager.deleteProductFromCart(cid, pid);
-
-    res.send({
-      status: "success",
-      payload: result,
-    });
-  } catch (error) {
-    console.log(error);
-
-    res.send({
-      success: false,
-      error: "ERROR",
-    });
-  }
-});
-
-routerCart.put("/:cid", async (req, res) => {
-  try {
-    const { cid } = req.params;
-
-    const productToReplace = req.body;
-
-    const result = await cartDBManager.arrayProducts(cid, productToReplace);
-
-    res.send({
-      status: "success",
-      payload: result,
-    });
-  } catch (error) {
-    console.log(error);
-
-    res.send({
-      status: "error",
-      error: "ERROR",
-    });
-  }
-});
-
-routerCart.put("/:cid/products/:pid", async (req, res) => {
-  try {
-    const { quantity } = req.body;
-    const { cid, pid } = req.params;
-
-    const result = await cartDBManager.updateQuantity(quantity, cid, pid);
-    res.send({
-      status: "success",
-      payload: result,
-    });
-  } catch (error) {
-    console.log(error);
-
-    res.send({
-      status: "error",
-      error: "ERROR",
-    });
-  }
-});
-
-routerCart.delete("/:cid", async (req, res) => {
-  try {
-    const { cid } = req.params;
-
-    const result = await cartDBManager.emptyCart(cid);
-
-    res.send({
-      status: "success",
-      payload: result,
-    });
-  } catch (error) {
-    console.log(error);
-
-    res.send({
-      status: "error",
-      error: "ERROR",
-    });
-  }
-});
+routerCart.delete("/:cid", emptyCart);
 
 export { routerCart as cartsRouter };

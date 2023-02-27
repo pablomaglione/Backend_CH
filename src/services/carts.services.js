@@ -1,7 +1,7 @@
-import cartModel from "../../models/carts.model.js";
+import cartModel from "../models/carts.model.js";
 
-export class CartDBManager {
-  async createCart() {
+class CartsServices {
+  createCart = async () => {
     try {
       const newCart = {
         products: [],
@@ -13,16 +13,52 @@ export class CartDBManager {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
-  async addProductCart(cid, pid) {
+  getCarts = async () => {
     try {
+      const carts = await cartModel.find();
+
+      if (carts) {
+        return carts;
+      } else {
+        return {
+          error: "No existen Carritos",
+        };
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  getCartByID = async (cid) => {
+    try {
+      const cart = await cartModel
+        .findById({ _id: cid })
+        .populate("product.id")
+        .lean();
+
+      if (cart) return cart;
+      else
+        return {
+          error: "No existe Carrito con ese ID",
+        };
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  addProductCart = async (cid, pid) => {
+    try {
+      const cart = await this.getCartByID(cid);
+      if (!cart) throw new Error("Carrito no encontrado");
+
       const productInCart = await cartModel.findOne({ "product.id": pid });
 
       if (productInCart) {
         const upgQuatity = await cartModel.updateOne(
           { _id: cid },
-          { $inc: { "product.quatity": 1 } }
+          { $inc: { "product.quantity": 1 } }
         );
         return upgQuatity;
       } else {
@@ -36,32 +72,13 @@ export class CartDBManager {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
-  async getCarts() {
-    const carts = await cartModel.find();
-
-    if (carts) {
-      return carts;
-    } else {
-      return {
-        error: "No existen Carritos",
-      };
-    }
-  }
-
-  async getCartByID(cid) {
-    const cart = await cartModel.findOne({ cid });
-
-    if (cart) return cart;
-    else
-      return {
-        error: "No existe Carrito con ese ID",
-      };
-  }
-
-  async deleteProductFromCart(cid, pid) {
+  deleteProductFromCart = async (cid, pid) => {
     try {
+      const cart = await this.getCartByID(cid);
+      if (!cart) throw new Error("Carrito no encontrado");
+
       const deleteOne = await cartModel.updateOne(
         { _id: cid },
         {
@@ -75,10 +92,13 @@ export class CartDBManager {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
-  async arrayProducts(cid, products) {
+  arrayProducts = async (cid, products) => {
     try {
+      const cart = await this.getCartByID(cid);
+      if (!cart) throw new Error("Carrito no encontrado");
+
       const product = products.map((product) => {
         return { product: product._id };
       });
@@ -96,21 +116,16 @@ export class CartDBManager {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
-  async updateQuantity(quantity, cid, pid) {
+  updateQuantity = async (quantity, cid, pid) => {
     try {
-      const Cart = await cartModel.findById({
-        _id: cid,
-      });
-
-      if (!Cart) {
-        throw new NotFoundError("Carrito no encontrado");
-      }
+      const cart = await this.getCartByID(cid);
+      if (!cart) throw new Error("Carrito no encontrado");
 
       const upgradeQuantity = await cartModel.updateOne(
         {
-          "cart.product": pid,
+          "product.id": pid,
         },
         {
           $inc: {
@@ -127,10 +142,13 @@ export class CartDBManager {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
-  async emptyCart(cid) {
+  emptyCart = async (cid) => {
     try {
+      const cart = await this.getCartByID(cid);
+      if (!cart) throw new Error("Carrito no encontrado");
+
       const emptyCart = await cartModel.updateOne(
         {
           _id: cid,
@@ -146,5 +164,7 @@ export class CartDBManager {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 }
+
+export const CartsServices = new CartsServices();

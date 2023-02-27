@@ -1,8 +1,28 @@
-import bcrypt from 'bcrypt'
+import bcrypt from "bcrypt";
+import dotenv from "dotenv";
+import MongoStore from "connect-mongo";
 
+dotenv.config();
 
-export const createHash = password => bcrypt.hashSync(password, bcrypt.genSaltSync(10))
+export const createHash = (password) =>
+  bcrypt.hashSync(password, bcrypt.genSaltSync(10));
 
-export const isValidPassword = (user, password)=>{
-   return bcrypt.compareSync(password, user.password)
-}
+export const isValidPassword = (user, password) => {
+  return bcrypt.compareSync(password, user.password);
+};
+
+export const MongoStoreSession = {
+  store: MongoStore.create({
+    mongoUrl: process.env.DB_URL,
+    dbName: process.env.DB_NAME,
+    collectionName: process.env.COLLECTION_NAME,
+    mongoOptions: {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    },
+    ttl: 20,
+  }),
+  secret: process.env.SESSION_SECRET,
+  resave: true,
+  saveUninitialized: true,
+};

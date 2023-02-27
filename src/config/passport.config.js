@@ -1,11 +1,14 @@
 import passport from 'passport'
 import passportLocal from 'passport-local'
-import userModel from '../dao/models/user.model.js'
-import cartModel from '../dao/models/carts.model.js'
+import userModel from '../models/user.model.js'
+import cartModel from '../models/carts.model.js'
 import { createHash, isValidPassword } from '../utils.js'
 import gitHubStrategy from 'passport-github2'
+import UserServices from '../services/users.services.js'
 
 const localStrategy = passportLocal.Strategy
+const {registerUser, loginUser} = UserServices;
+
 
 const initializePassport = () => {
 
@@ -14,7 +17,7 @@ const initializePassport = () => {
         clientSecret: "2557c4b67e0f5df8a3fd275f54830b633456baf4",
         callBackURL: "http://localhost:8080/sessions/githubCallback",
     },
-    async(accessToke, refreshToken, profile, done) =>{
+    async(accessToken, refreshToken, profile, done) =>{
         console.log(profile);
         try{
             const user = await userModel.findOne({email: profile._json.email})
@@ -48,51 +51,12 @@ const initializePassport = () => {
         {
             passReqToCallback: true, usernameField: 'email'
         },
-        async (req, username, password, done) => {
-            const newUser= req.body
-            try {
-                const user = await userModel.findOne({email: username})
-                if(user) {
-                    console.log('User already exits');
-                    return done(null, false)
-                }
-
-                const newCart = {
-                    products: []
-                }
-
-                let cart = await cartModel.create(newCart);
-
-                const hashUser = {
-                    ...newUser,
-                    cart: cart._id,
-                    password: createHash(newUser.password)
-                }
-                const result = await userModel.create(hashUser)
-                return done(null, result)
-            } catch (error) {
-                return done("Error to register " + error)
-            }
-        }
+        async (req, username, password, done) => registerUser(req, username, password, done)
     ))
 
     passport.use('login', new localStrategy(
         { usernameField: 'email'},
-        async(username, password, done) => {
-            try {
-                const user = await userModel.findOne({email: username}).lean().exec()
-                if(!user) {
-                    console.error('User donst exist');
-                    return done(null, false)
-                }
-
-                if(!isValidPassword(user, password)) return done(null, false)
-
-                return done(null, user) //corregir y no pasar todo el user
-            } catch (error) {
-                return done(error)
-            }
-        }
+        async(username, password, done) => loginUser (username, password, done)
     ))
     
     passport.serializeUser((user, done) => {

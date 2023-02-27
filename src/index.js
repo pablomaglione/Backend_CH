@@ -1,5 +1,6 @@
 import express from "express";
 import __dirname from "./dirname.js";
+import dotenv from "dotenv";
 import handlebars from "express-handlebars";
 import { Server as HttpServer } from "http";
 import { Server as IOServer } from "socket.io";
@@ -10,19 +11,26 @@ import {
   messagesRouter,
   sessionRouter
 } from "./routers/index.router.js";
-import { productDBManager } from "./dao/Managers/index.js";
+//import { productDBManager } from "./dao/Managers/index.js";
 import mongoose from "mongoose";
-import MongoStore from "connect-mongo";
 import session from "express-session";
 import passport from "passport";
 import initializePassport from "./config/passport.config.js";
+import { MongoConnection } from "./mongo.js";
+import { MongoStoreSession } from "./utils.js";
 
+
+dotenv.config();
 const app = express();
-const MONGO_URL =
-  "mongodb+srv://user01:Us3r2023@ecommerce.yrj8xfb.mongodb.net/?retryWrites=true&w=majority";
-const PORT = 8080;
-const httpServer = new HttpServer(app);
-const io = new IOServer(httpServer);
+const PORT = process.env.PORT;
+
+MongoConnection.getInstance();
+initializePassport()
+// const MONGO_URL =
+//   "mongodb+srv://user01:Us3r2023@ecommerce.yrj8xfb.mongodb.net/?retryWrites=true&w=majority";
+// const PORT = 8080;
+//const httpServer = new HttpServer(app);
+//const io = new IOServer(httpServer);
 
 app.engine(
   "handlebars",
@@ -31,38 +39,37 @@ app.engine(
     defaultLayout: "main.handlebars",
   })
 );
-
-app.use(express.static("public"));
-
 app.set("view engine", "handlebars");
 app.set("views", `${__dirname}/views`);
 
+app.use(session(MongoStoreSession))
+app.use(passport.initialize())
+app.use(passport.session())
+app.use(express.static( __dirname + "/public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.set("io", io);
 
-app.use(
-  session({
-    store: MongoStore.create({
-      mongoUrl: MONGO_URL,
-      dbName: "ecommerce",
-      collectionName: "sessions",
-      mongoOptions: {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-      },
-      ttl: 20,
-    }),
-    secret: "@Pablo",
-    resave: true,
-    saveUninitialized: true,
-  })
-);
 
-initializePassport()
-app.use(passport.initialize())
-app.use(passport.session())
+//app.set("io", io);
+
+// app.use(
+//   session({
+//     store: MongoStore.create({
+//       mongoUrl: MONGO_URL,
+//       dbName: "ecommerce",
+//       collectionName: "sessions",
+//       mongoOptions: {
+//         useNewUrlParser: true,
+//         useUnifiedTopology: true,
+//       },
+//       ttl: 20,
+//     }),
+//     secret: "@Pablo",
+//     resave: true,
+//     saveUninitialized: true,
+//   })
+// );
 
 const Auth = (req, res, next) => {
   if (req.session?.user) {
@@ -79,26 +86,17 @@ app.use("/", ViewsRouter);
 
 
 //Conexion a DB Mongo Atlas
-mongoose.set("strictQuery", false);
-mongoose.connect(MONGO_URL, { dbName: "ecommerce" }, (error) => {
-  if (error) {
-    console.error("No se pudo conectar a la DB");
-    return;
-  }
+// mongoose.set("strictQuery", false);
+// mongoose.connect(MONGO_URL, { dbName: "ecommerce" }, (error) => {
+//   if (error) {
+//     console.error("No se pudo conectar a la DB");
+//     return;
+//   }
 
-  console.log("DB Connectado!!");
-  httpServer.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-});
+//   console.log("DB Connectado!!");
+//httpServer.listen(PORT, () => console.log(`Server running`));
+// });
 
-io.on("connection", async (socket) => {
-  console.log(`New client connected, id: ${socket.id}`);
-
-  const products = await productDBManager.getProducts();
-
-  io.sockets.emit("products", products);
-
-  socket.on("addProduct", async (product) => {
-    console.log(product);
-    await productDBManager.addProduct(product);
-  });
-});
+app.listen(PORT, () => {
+  console.log(`Server running`);
+})

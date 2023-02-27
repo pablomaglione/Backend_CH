@@ -1,7 +1,41 @@
-import productModel from "../../models/products.model.js";
+import { productModel } from "../models/products.model.js";
 
-export class ProductDBManager {
-  async addProduct({
+class ProductsServices {
+  getProducts = async (filter, query) => {
+    try {
+      const search = {};
+      if (query) {
+        search["$or"] = [
+          { code: { $regex: query } },
+          { title: { $regex: query } },
+          { category: { $regex: query } },
+        ];
+        const products = await productModel.paginate(search, filter);
+        return products;
+      }
+
+      const products = await productModel.paginate({}, filter);
+
+      return products;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  getProductsByID = async (productid) => {
+    try {
+      const products = await productModel.findById({ _id: productid }).lean();
+
+      if (!products) {
+        throw new Error("Producto No encontrado");
+      }
+      return products;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  addProduct = async (
     title,
     description,
     price,
@@ -9,8 +43,8 @@ export class ProductDBManager {
     code,
     status,
     stock,
-    category,
-  }) {
+    category
+  ) => {
     try {
       if (
         !title ||
@@ -35,7 +69,6 @@ export class ProductDBManager {
         stock,
         category,
       };
-
       const existCode = await productModel.findOne({ code: code }).lean();
       if (existCode) {
         return {
@@ -52,36 +85,9 @@ export class ProductDBManager {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
-  async getProducts(filter, query) {
-    try {
-      const search = {};
-      if (query) {
-        search["$or"] = [
-          { code: { $regex: query } },
-          { title: { $regex: query } },
-          { category: { $regex: query } },
-        ];
-        const products = await productModel.paginate(search, filter);
-        return products;
-      }
-
-      const products = await productModel.paginate({}, filter);
-
-      return products;
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  async getProductByID(productid) {
-    const products = await productModel.findById({ _id: productid }).lean();
-
-    if (products) return products;
-  }
-
-  async updateProduct(productid, updProd) {
+  updateProduct = async (productid, updProd) => {
     try {
       const product = await productModel.updateOne({ _id: productid }, updProd);
 
@@ -89,9 +95,9 @@ export class ProductDBManager {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
-  async deleteProduct(productid) {
+  deleteProduct = async (productid) => {
     try {
       const product = await productModel.deleteOne({ _id: productid });
 
@@ -99,5 +105,9 @@ export class ProductDBManager {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 }
+
+const ProductsServices = ProductsServices();
+
+export default ProductsServices;
