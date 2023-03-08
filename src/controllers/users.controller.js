@@ -1,6 +1,8 @@
+import UserService from "../services/users.services.js";
 
 export const getRegister = (req, res) => {
     try{
+
         res.render('sessions/register')
     }catch(error){
         console.log(error);
@@ -9,6 +11,7 @@ export const getRegister = (req, res) => {
 
 export const getLogin = (req, res) => {
     try{
+
         res.render('sessions/login', {})
     }catch(error){
         console.log(error);
