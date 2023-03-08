@@ -10,8 +10,14 @@ const productSchema = new mongoose.Schema({
     price: Number,
     thumbail: String,
     code: Number,
-    stock: Number,
-    category: String
+    stock: {
+        type: Number,
+        index: true,
+    },
+    category: {
+        Type: String,
+        index: true,
+    },
 })
 
 productSchema.plugin(mongoosePaginate);

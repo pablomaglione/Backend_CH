@@ -1,4 +1,7 @@
 import cartModel from "../models/carts.model.js";
+import userModel from "../models/user.model.js";
+import ticketModel from "../models/ticket.model.js";
+import {ProductsServices} from "../services/products.services.js"
 
 class CartsServices {
   createCart = async () => {
@@ -165,7 +168,61 @@ class CartsServices {
       console.log(error);
     }
   };
+
+  generateTicket = async (purchase, total) => {
+    try{
+      const result = await ticketModel.create({
+        amout: total,
+        purchase: purchase,
+      })
+
+      return result;
+    }catch(error){
+      console.log(error);
+    }
+  }
+
+  deleteProductStock = async (cid, products) => {
+    try{
+      let total = 0;
+
+      products.forEach(async(product) => {
+        const pid = product.product_id;
+
+        if(ProductsServices.updateStock(pid, product.quantity)){
+          await this.deleteProductFromCart(cid, pid)
+
+          total += product.product.price
+        }
+        
+      });
+      return total;
+    }catch(error){
+      console.log(error);
+    }
+  }
+
+  purchaseProducts = async (cid) => {
+    try{
+      const cart = await this.getCartByID(cid)
+
+      if(!cart) throw new Error ("Carrito no exite")
+
+      const products = Array.from(products.cart)
+
+      const purchase = await userModel.findOne({cart: cid}).lean().exec()
+
+      const total = await this.deleteProductFromCart(cid, products)
+
+      const ticket = await this.generateTicket(purchase.email, total)
+
+      return ticket;
+    }catch(error){
+      console.log(error);
+    }
+  }
 }
+
 
 const CartServices = new CartsServices();
 

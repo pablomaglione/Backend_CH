@@ -1,18 +1,8 @@
 import express from "express";
+import { getChatPage } from "../controllers/messages.controller.js";
 
 const routerMessages = express.Router();
 
-routerMessages.get("/", async (req, res) => {
-  try {
-    res.render("chat");
-  } catch (error) {
-    console.log(error);
-
-    res.send({
-      succes: false,
-      error,
-    });
-  }
-});
+routerMessages.get("/", getChatPage);
 
 export { routerMessages as messagesRouter };

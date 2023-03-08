@@ -106,6 +106,26 @@ class ProductsServices {
       console.log(error);
     }
   };
+
+  updateStock = async (pid, quantity) => {
+    try {
+      const product = await this.getProductsByID(pid);
+
+      if (product.stock < quantity) {
+        console.log("Stock insuficiente");
+
+        return false;
+      }
+
+      await productModel.updateOne(
+        { _id: pid },
+        { $inc: { stock: -quantity } }
+      );
+      return true;
+    } catch (error) {
+      console.log(error);
+    }
+  };
 }
 
 const ProductServices = new ProductsServices();

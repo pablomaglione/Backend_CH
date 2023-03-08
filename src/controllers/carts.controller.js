@@ -94,67 +94,83 @@ export const addProductCart = async (req, res) => {
 };
 
 export const deleteProductFromCart = async (req, res) => {
-    try {
-        const { cid, pid } = req.params;
-    
-        const result = await CartServices.deleteProductFromCart(cid, pid);
-    
-        res.status(401).send({
-          status: "success",
-          payload: result,
-        });
-      } catch (error) {
-        console.log(error);
-        return res.status(400).send("Ha ocurrido un error");
-      }
-}
+  try {
+    const { cid, pid } = req.params;
+
+    const result = await CartServices.deleteProductFromCart(cid, pid);
+
+    res.status(401).send({
+      status: "success",
+      payload: result,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).send("Ha ocurrido un error");
+  }
+};
 
 export const arrayProducts = async (req, res) => {
-    try {
-        const { cid } = req.params;
-    
-        const productToReplace = req.body;
-    
-        const result = await CartServices.arrayProducts(cid, productToReplace);
-    
-        res.status(200).send({
-          status: "success",
-          payload: result,
-        });
-      } catch (error) {
-        console.log(error);
-        return res.status(400).send("Ha ocurrido un error");
-      }
-}
+  try {
+    const { cid } = req.params;
+
+    const productToReplace = req.body;
+
+    const result = await CartServices.arrayProducts(cid, productToReplace);
+
+    res.status(200).send({
+      status: "success",
+      payload: result,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).send("Ha ocurrido un error");
+  }
+};
 
 export const updateQuantity = async (req, res) => {
-    try {
-        const { quantity } = req.body;
-        const { cid, pid } = req.params;
-    
-        const result = await CartServices.updateQuantity(quantity, cid, pid);
-        res.status(200).send({
-          status: "success",
-          payload: result,
-        });
-      } catch (error) {
-        console.log(error);
-        return res.status(400).send("Ha ocurrido un error");
-      }
-}
+  try {
+    const { quantity } = req.body;
+    const { cid, pid } = req.params;
+
+    const result = await CartServices.updateQuantity(quantity, cid, pid);
+    res.status(200).send({
+      status: "success",
+      payload: result,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).send("Ha ocurrido un error");
+  }
+};
 
 export const emptyCart = async (req, res) => {
-    try {
-        const { cid } = req.params;
-    
-        const result = await CartServices.emptyCart(cid);
-    
-        res.status(200).send({
-          status: "success",
-          payload: result,
-        });
-      } catch (error) {
-        console.log(error);
-        return res.status(400).send("Ha ocurrido un error");
-      }
-}
+  try {
+    const { cid } = req.params;
+
+    const result = await CartServices.emptyCart(cid);
+
+    res.status(200).send({
+      status: "success",
+      payload: result,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).send("Ha ocurrido un error");
+  }
+};
+
+export const purchaseCart = async (req, res) => {
+  try {
+    const { cid } = req.params;
+
+    const result = await CartServices.purchaseProducts(cid);
+
+    res.status(200).send({
+      status: "success",
+      payload: result,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).send("Ha ocurrido un error");
+  }
+};
