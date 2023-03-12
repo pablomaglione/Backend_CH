@@ -2,7 +2,6 @@ import express from "express";
 import __dirname from "./dirname.js";
 import dotenv from "dotenv";
 import handlebars from "express-handlebars";
-import { Auth } from "./utils/auth.js";
 import { Server as HttpServer } from "http";
 import { Server as IOServer } from "socket.io";
 import {
@@ -12,7 +11,6 @@ import {
   messagesRouter,
   sessionRouter
 } from "./routers/index.router.js";
-//import { productDBManager } from "./dao/Managers/index.js";
 import mongoose from "mongoose";
 import session from "express-session";
 import passport from "passport";

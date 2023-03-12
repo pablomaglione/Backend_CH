@@ -1,7 +1,7 @@
 import cartModel from "../models/carts.model.js";
 import userModel from "../models/user.model.js";
 import ticketModel from "../models/ticket.model.js";
-import {ProductsServices} from "../services/products.services.js"
+import ProductServices from "./products.services.js"
 
 class CartsServices {
   createCart = async () => {
@@ -189,7 +189,7 @@ class CartsServices {
       products.forEach(async(product) => {
         const pid = product.product_id;
 
-        if(ProductsServices.updateStock(pid, product.quantity)){
+        if(ProductServices.updateStock(pid, product.quantity)){
           await this.deleteProductFromCart(cid, pid)
 
           total += product.product.price
