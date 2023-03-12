@@ -1,12 +1,16 @@
 import userModel from "../models/user.model.js";
 import { createHash, isValidPassword } from "../utils.js";
+import UserDto from "../DTO/user.dto.js";
+import CartServices from "./carts.services.js";
 
 class UserServices{
     findAllUsers = async () => {
         try{
-            const users = userModel.find().lean().exec();
+            const users = await userModel.find().lean().exec();
 
-            return users;
+            const mapUser = users.map((user) => new UserDto(user));
+
+            return mapUser;
         }catch (error){
             console.log(error);
         }
@@ -14,12 +18,13 @@ class UserServices{
 
     findUser = async (username, done) => {
         try{
-            const user = await userModel.findOne({email: username}).lean().exec()
-                if(!user) {
+            const result = await userModel.findOne({email: username}).lean().exec()
+                if(!result) {
                     console.error('User donst exist');
                     return done(null, false)
                 }
-                return done(null, user)
+            const user = new UserDto(result)
+            return done(null, user)
         }catch (error) {
             return done(error)
         }   
@@ -33,16 +38,10 @@ class UserServices{
                     console.log('User already exits');
                     return done(null, false)
                 }
-
-                // const newCart = {
-                //     products: []
-                // }
-
-                // let cart = await cartModel.create(newCart);
-                
+  
                 const hashUser = {
                     ...newUser,
-                    cart: cart._id,
+                    cart: await CartServices.createCart(),
                     password: createHash(newUser.password)
                 }
                 const createUser = await userModel.create(hashUser)
@@ -62,7 +61,8 @@ class UserServices{
 
             if(!isValidPassword(user, password)) return done(null, false)
 
-            return done(null, user)
+            const dtoUser = new UserDto(user)
+            return done(null, dtoUser)
         }catch (error) {
             return done(error)
         }

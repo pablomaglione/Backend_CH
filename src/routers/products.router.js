@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { Auth } from "../utils/auth.js";
 import {
   addProduct,
   deleteProduct,
@@ -13,10 +14,10 @@ router.get("/", getProducts);
 
 router.get("/:id", getProductByID);
 
-router.post("/", addProduct);
+router.post("/", Auth("admin"), addProduct);
 
-router.put("/:id", updateProduct);
+router.put("/:id", Auth("admin"), updateProduct);
 
-router.delete("/:id", deleteProduct);
+router.delete("/:id", Auth("admin"), deleteProduct);
 
 export { router as productsRouter };

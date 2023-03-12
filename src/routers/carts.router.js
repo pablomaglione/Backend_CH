@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { Auth } from "../utils/auth.js";
 import {
   addProductCart,
   arrayProducts,
@@ -19,7 +20,7 @@ routerCart.get("/", getCarts);
 
 routerCart.get("/:cid", getCartByID);
 
-routerCart.post("/:cid/products/:pid", addProductCart);
+routerCart.post("/:cid/products/:pid", Auth("admin"), addProductCart);
 
 routerCart.delete("/:cid/products/:pid", deleteProductFromCart);
 

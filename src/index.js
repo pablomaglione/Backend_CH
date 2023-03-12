@@ -2,6 +2,7 @@ import express from "express";
 import __dirname from "./dirname.js";
 import dotenv from "dotenv";
 import handlebars from "express-handlebars";
+import { Auth } from "./utils/auth.js";
 import { Server as HttpServer } from "http";
 import { Server as IOServer } from "socket.io";
 import {
@@ -71,17 +72,11 @@ app.use(express.urlencoded({ extended: true }));
 //   })
 // );
 
-const Auth = (req, res, next) => {
-  if (req.session?.user) {
-    return next();
-  }
-  return res.status(400).send("No autorizado");
-};
 
 app.use("/sessions", sessionRouter)
-app.use("/api/products/", Auth, productsRouter);
-app.use("/api/carts/", Auth, cartsRouter);
-app.use("/messages", Auth, messagesRouter);
+app.use("/api/products/", productsRouter);
+app.use("/api/carts/", cartsRouter);
+app.use("/messages", messagesRouter);
 app.use("/", ViewsRouter);
 
 

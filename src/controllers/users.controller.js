@@ -1,4 +1,6 @@
-import UserService from "../services/users.services.js";
+import dotenv from "dotenv"
+
+dotenv.config();
 
 export const getRegister = (req, res) => {
     try{
