@@ -8,10 +8,10 @@ export class MongoConnection{
 
     constructor(){
         set("strictQuery", false);
-        connect(process.env.DB_URL, {
+        connect(process.env.MONGO_URL, {
             useNewUrlParser: true,
             useUnifieldTopology: true,
-            dbName: process.env.DB_NAME,
+            dbName: process.env.MONGO_DB,
         });
     }
 
@@ -21,7 +21,7 @@ export class MongoConnection{
             return this.#instance;
         }
         this.#instance = new MongoConnection();
-        console.log("Conectado!!!");
+        //console.log("Conectado!!!");
         return this.#instance;
     } 
 }

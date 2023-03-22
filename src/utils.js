@@ -2,8 +2,9 @@ import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import MongoStore from "connect-mongo";
 
-dotenv.config();
 
+dotenv.config();
+console.log(process.env);
 export const createHash = (password) =>
   bcrypt.hashSync(password, bcrypt.genSaltSync(10));
 
@@ -13,8 +14,8 @@ export const isValidPassword = (user, password) => {
 
 export const MongoStoreSession = {
   store: MongoStore.create({
-    mongoUrl: process.env.DB_URL,
-    dbName: process.env.DB_NAME,
+    mongoUrl: process.env.MONGO_URL,
+    dbName: process.env.MONGO_DB,
     collectionName: process.env.COLLECTION_NAME,
     mongoOptions: {
       useNewUrlParser: true,

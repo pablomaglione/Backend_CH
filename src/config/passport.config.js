@@ -5,6 +5,7 @@ import cartModel from '../models/carts.model.js'
 import { createHash, isValidPassword } from '../utils.js'
 import gitHubStrategy from 'passport-github2'
 import UserServices from '../services/users.services.js'
+import UserDto from '../DTO/user.dto.js'
 
 const localStrategy = passportLocal.Strategy
 const {registerUser, loginUser} = UserServices;
@@ -18,12 +19,14 @@ const initializePassport = () => {
         callBackURL: "http://localhost:8080/sessions/githubCallback",
     },
     async(accessToken, refreshToken, profile, done) =>{
-        console.log(profile);
+
         try{
-            const user = await userModel.findOne({email: profile._json.email})
+            const usr = await userModel.findOne({email: profile._json.email})
+
+            const user = new UserDto(usr)
             if(user){
                 console.log('User already exists');
-                return done(null, user) // corregir y no pasar todo el user
+                return done(null, user) 
             }
 
             const newCart = {
@@ -40,7 +43,8 @@ const initializePassport = () => {
                 cart: cart._id
             }
             const result = await userModel.create(newUser)
-            return done(null, result) //corregir y no pasar todo el user
+            user = new UserDto(result)
+            return done(null, user)
         }catch (error){
             return done('Error to login with github' + error)
         }
