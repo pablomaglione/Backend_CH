@@ -17,6 +17,8 @@ import passport from "passport";
 import initializePassport from "./config/passport.config.js";
 import { MongoConnection } from "./mongo.js";
 import { MongoStoreSession } from "./utils.js";
+import { productsMockRouter } from "./routers/productsMock.router.js";
+import { errorHandler } from "./middlewares/errorHandler.js";
 
 
 dotenv.config();
@@ -43,6 +45,7 @@ app.use(passport.session())
 app.use(express.static( __dirname + "/public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(errorHandler);
 
 
 app.use("/sessions", sessionRouter)
@@ -50,6 +53,7 @@ app.use("/api/products/", productsRouter);
 app.use("/api/carts/", cartsRouter);
 app.use("/messages", messagesRouter);
 app.use("/", ViewsRouter);
+app.use("/mockingproducts", productsMockRouter);
 
 app.listen(PORT, () => {
   console.log(`Server running`);

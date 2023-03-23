@@ -1,15 +1,15 @@
 import CartServices from "../services/carts.services.js";
+import { ERRORS_ENUM } from "../errors/enums.js";
+import CustomError from "../errors/customError.js";
 
 export const createCart = async (req, res) => {
   try {
-    const addCart = await CartServices.createCart();
-    return res.status(200).send({
-      success: true,
-      productCart: addCart,
+    await CartServices.createCart();
+    res.status(200).send({
+      message: "Carrito creado"
     });
   } catch (error) {
-    console.log(error);
-    return res.static(400).send({ error: "Ha ocurrido un error" });
+    return res.static(400).send({ status: error.name, message: error.message });
   }
 };
 
@@ -17,12 +17,17 @@ export const getCarts = async (req, res) => {
   try {
     const carts = await CartServices.getCarts();
 
+    if (!carts){
+      CustomError.createError({
+        message: ERRORS_ENUM["CART IS EMPTY"]
+      })
+    }
     return res.status(200).send({
+      success: true,
       payload: carts,
     });
   } catch (error) {
-    console.log(error);
-    return res.status(400).send("Ha ocurrido un error");
+    return res.status(400).send({status: error.name, message: error.message});
   }
 };
 
@@ -42,18 +47,17 @@ export const getCartByID = async (req, res) => {
     const cart = await CartServices.getCartByID(id);
 
     if (!cart) {
-      return res.status(401).send({
-        success: false,
-        error: "Producto no encontrado",
-      });
+      CustomError.createError({
+        message: ERRORS_ENUM["CART NOT FOUND"]
+      })
     }
-    return res.status(200).send({
+  
+    res.status(200).send({
       success: true,
-      cart,
+      payload: cart,
     });
   } catch (error) {
-    console.log(error);
-    return res.status(400).send("Ha ocurrido un error");
+      return res.status(400).send({status: error.name, message: error.message});
   }
 };
 
@@ -65,7 +69,7 @@ export const addProductCart = async (req, res) => {
 
     if (Number.isNaN(cid) || cid < 0) {
       return res.status(401).send({
-        succes: false,
+        success: false,
         error: "El id del carrito ingresado es invalido",
       });
     }
@@ -76,20 +80,25 @@ export const addProductCart = async (req, res) => {
 
     if (Number.isNaN(pid) || pid < 0) {
       return res.status(401).send({
-        succes: false,
+        success: false,
         error: "El id del producto ingresado es invalido",
       });
     }
 
     const productAddedCart = await CartServices.addProductCart(cid, pid);
 
-    return res.status(200).send({
-      succes: true,
-      product: productAddedCart,
+    if(!productAddedCart){
+      CustomError.createError({
+        message: ERRORS_ENUM["INVALID CART PROPERTY"]
+      })
+    }
+    
+    res.status(200).send({
+      success: true,
+      payload: productAddedCart,
     });
   } catch (error) {
-    console.log(error);
-    return res.status(400).send("Ha ocurrido un error");
+    return res.status(400).send({status: error.name, message: error.message});
   }
 };
 
@@ -99,13 +108,18 @@ export const deleteProductFromCart = async (req, res) => {
 
     const result = await CartServices.deleteProductFromCart(cid, pid);
 
+    if(!result){
+      CustomError.createError({
+        message: ERRORS_ENUM["INVALID CART PROPERTY"]
+      })
+    }
+
     res.status(401).send({
-      status: "success",
+      success: true,
       payload: result,
     });
   } catch (error) {
-    console.log(error);
-    return res.status(400).send("Ha ocurrido un error");
+    return res.status(400).send({status: error.name, message: error.message});
   }
 };
 
@@ -118,12 +132,11 @@ export const arrayProducts = async (req, res) => {
     const result = await CartServices.arrayProducts(cid, productToReplace);
 
     res.status(200).send({
-      status: "success",
+      success: true,
       payload: result,
     });
   } catch (error) {
-    console.log(error);
-    return res.status(400).send("Ha ocurrido un error");
+    return res.status(400).send({status: error.name, message: error.message});
   }
 };
 
@@ -133,13 +146,19 @@ export const updateQuantity = async (req, res) => {
     const { cid, pid } = req.params;
 
     const result = await CartServices.updateQuantity(quantity, cid, pid);
+    
+    if(!result){
+      CustomError.createError({
+        message: ERRORS_ENUM["INVALID CART PROPERTY"]
+      })
+    }
+    
     res.status(200).send({
-      status: "success",
+      success: true,
       payload: result,
     });
   } catch (error) {
-    console.log(error);
-    return res.status(400).send("Ha ocurrido un error");
+    return res.status(400).send({status: error.name, message: error.message});
   }
 };
 
@@ -150,12 +169,11 @@ export const emptyCart = async (req, res) => {
     const result = await CartServices.emptyCart(cid);
 
     res.status(200).send({
-      status: "success",
+      success: true,
       payload: result,
     });
   } catch (error) {
-    console.log(error);
-    return res.status(400).send("Ha ocurrido un error");
+     return res.status(400).send({status: error.name, message: error.message});
   }
 };
 
@@ -165,12 +183,17 @@ export const purchaseCart = async (req, res) => {
 
     const result = await CartServices.purchaseProducts(cid);
 
+    if(!result){
+      CustomError.createError({
+        message: ERRORS_ENUM["INVALID CART PROPERTY"]
+      })
+    }
+
     res.status(200).send({
-      status: "success",
+      success: true,
       payload: result,
     });
   } catch (error) {
-    console.log(error);
-    return res.status(400).send("Ha ocurrido un error");
+    return res.status(400).send({status: error.name, message: error.message});
   }
 };

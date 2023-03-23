@@ -6,7 +6,7 @@ export const getChatPage = async (req, res) => {
         console.log(error);
     
         res.send({
-          succes: false,
+          success: false,
           error,
         });
     }

@@ -9,8 +9,8 @@ export class MongoConnection{
     constructor(){
         set("strictQuery", false);
         connect(process.env.MONGO_URL, {
-            useNewUrlParser: true,
-            useUnifieldTopology: true,
+            // useNewUrlParser: true,
+            // useUnifieldTopology: true,
             dbName: process.env.MONGO_DB,
         });
     }

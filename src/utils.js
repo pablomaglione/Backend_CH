@@ -4,7 +4,7 @@ import MongoStore from "connect-mongo";
 
 
 dotenv.config();
-console.log(process.env);
+
 export const createHash = (password) =>
   bcrypt.hashSync(password, bcrypt.genSaltSync(10));
 

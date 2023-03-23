@@ -1,4 +1,6 @@
 import  ProductServices from "../services/products.services.js";
+import CustomError from "../errors/customError.js";
+import { ERRORS_ENUM } from "../errors/enums.js";
 
 export const getProducts = async (req, res) => {
   try {
@@ -13,7 +15,13 @@ export const getProducts = async (req, res) => {
 
     const products = await ProductServices.getProducts(filter, query);
 
-    return res.status(200).send({
+    if (!products) {
+      CustomError.createError({
+        message: ERRORS_ENUM["PRODUCT NOT FOUND"],
+      });
+    }
+
+    res.status(200).send({
       status: "Success",
       payload: products.docs,
       totalPages: products.totalPages,
@@ -30,7 +38,7 @@ export const getProducts = async (req, res) => {
         : null,
     });
   } catch (error) {
-    return res.status(400).send("Ha ocurrido un error");
+    return res.status(400).send({ status: error.name, message: error.message });
   }
 };
 
@@ -47,13 +55,14 @@ export const getProductByID = async (req, res) => {
     const product = await ProductServices.getProductByID(id);
 
     if (!product) {
-      return res.status(401).send("Producto no encontrado");
+      CustomError.createError({
+        message: ERRORS_ENUM["PRODUCT NOT FOUND"],
+      });
     }
+
     return res.status(200).send({ payload: product });
   } catch (error) {
-    console.log(error);
-
-    return res.status(400).send("Ha ocurrido un error");
+    return res.status(400).send({ status: error.name, message: error.message });
   }
 };
 
@@ -95,9 +104,15 @@ export const addProduct = async (req, res) => {
       category,
     });
 
+    if (!addProduct) {
+      CustomError.createError({
+        message: ERRORS_ENUM["INVALID PRODUCT PROPERTY"],
+      });
+    }
+
     return res.status(200).send({ payload: addProduct });
   } catch (error) {
-    return res.status(400).send("Ha ocurrido un error");
+    return res.status(400).send({ status: error.name, message: error.message });
   }
 };
 
@@ -108,7 +123,7 @@ export const updateProduct = async (req, res) => {
     const id = Number(paramId);
 
     if (Number.isNaN(id) || id < 0) {
-      return res.status(401).send("El id debe ser un número válido");
+      return res.status(401).send({ status: error.name, message: error.message });
     }
 
     const {
@@ -133,9 +148,15 @@ export const updateProduct = async (req, res) => {
       category,
     });
 
+    if (!updateProduct) {
+      CustomError.createError({
+        message: ERRORS_ENUM["PRODUCT NOT FOUND"],
+      });
+    }
+
     return res.status(200).send({ payload: updateProduct });
   } catch (error) {
-    return res.status(400).send("Ha ocurrido un error");
+    return res.status(400).send({ status: error.name, message: error.message });
   }
 };
 
@@ -146,13 +167,19 @@ export const deleteProduct = async (req, res) => {
     const id = Number(paramId);
 
     if (Number.isNaN(id) || id < 0) {
-      return res.status(401).send("El id debe ser un número válido");
+      return res.status(401).send({ status: error.name, message: error.message });
     }
 
     const deleteProduct = await ProductServices.deleteProduct(id);
 
+    if (!deleteProduct) {
+      CustomError.createError({
+        message: ERRORS_ENUM["PRODUCT NOT FOUND"],
+      });
+    }
+
     return res.status(200).send({ payload: deleteProduct });
   } catch (error) {
-    return res.status(400).send("Ha ocurrido un error");
+    return res.status(400).send({ status: error.name, message: error.message });
   }
 };
