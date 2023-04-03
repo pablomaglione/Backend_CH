@@ -19,7 +19,8 @@ import { MongoConnection } from "./mongo.js";
 import { MongoStoreSession } from "./utils.js";
 import { productsMockRouter } from "./routers/productsMock.router.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
-
+import {loggerRouter} from "./routers/logger.router.js"
+import { addLogger } from "./utils/logger.js";
 
 dotenv.config();
 
@@ -46,6 +47,7 @@ app.use(express.static( __dirname + "/public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(errorHandler);
+app.use(addLogger);
 
 
 app.use("/sessions", sessionRouter)
@@ -54,6 +56,7 @@ app.use("/api/carts/", cartsRouter);
 app.use("/messages", messagesRouter);
 app.use("/", ViewsRouter);
 app.use("/mockingproducts", productsMockRouter);
+app.use("/loggerTest", loggerRouter);
 
 app.listen(PORT, () => {
   console.log(`Server running`);

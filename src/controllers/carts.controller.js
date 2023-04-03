@@ -9,6 +9,7 @@ export const createCart = async (req, res) => {
       message: "Carrito creado"
     });
   } catch (error) {
+    req.logger.error(error);
     return res.status(400).send({ status: error.name, message: error.message });
   }
 };
@@ -27,6 +28,7 @@ export const getCarts = async (req, res) => {
       payload: carts,
     });
   } catch (error) {
+    req.logger.error(error);
     return res.status(400).send({status: error.name, message: error.message});
   }
 };
@@ -57,6 +59,7 @@ export const getCartByID = async (req, res) => {
       payload: cart,
     });
   } catch (error) {
+    req.logger.error(error);
       return res.status(400).send({status: error.name, message: error.message});
   }
 };
@@ -98,6 +101,7 @@ export const addProductCart = async (req, res) => {
       payload: productAddedCart,
     });
   } catch (error) {
+    req.logger.error(error);
     return res.status(400).send({status: error.name, message: error.message});
   }
 };
@@ -119,6 +123,7 @@ export const deleteProductFromCart = async (req, res) => {
       payload: result,
     });
   } catch (error) {
+    req.logger.error(error);
     return res.status(400).send({status: error.name, message: error.message});
   }
 };
@@ -136,6 +141,7 @@ export const arrayProducts = async (req, res) => {
       payload: result,
     });
   } catch (error) {
+    req.logger.error(error);
     return res.status(400).send({status: error.name, message: error.message});
   }
 };
@@ -158,6 +164,7 @@ export const updateQuantity = async (req, res) => {
       payload: result,
     });
   } catch (error) {
+    req.logger.error(error);
     return res.status(400).send({status: error.name, message: error.message});
   }
 };
@@ -173,6 +180,7 @@ export const emptyCart = async (req, res) => {
       payload: result,
     });
   } catch (error) {
+    req.logger.error(error);
      return res.status(400).send({status: error.name, message: error.message});
   }
 };
@@ -194,6 +202,7 @@ export const purchaseCart = async (req, res) => {
       payload: result,
     });
   } catch (error) {
+    req.logger.error(error);
     return res.status(400).send({status: error.name, message: error.message});
   }
 };

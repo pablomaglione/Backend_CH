@@ -35,6 +35,7 @@ export const getAllProducts = async (req, res) => {
 
     res.render("products", { products, products: result.docs });
   } catch (error) {
+    req.logger.error(error);
     res.render("error");
   }
 };
@@ -49,6 +50,7 @@ export const getProduct = async (req, res) => {
           product,
         });
       } catch (error) {
+        req.logger.error(error);
         res.render("error");
       }
 }
@@ -64,6 +66,7 @@ export const getCarts = async (req,res) => {
           cart,
         });
       } catch (error) {
+        req.logger.error(error);
         res.render("error");
       }
 }
@@ -80,6 +83,7 @@ export const getCartById = async (req, res) => {
           cart,
         });
       }catch (error) {
+        req.logger.error(error);
         res.render("error");
       }
 }

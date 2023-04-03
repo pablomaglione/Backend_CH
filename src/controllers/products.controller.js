@@ -38,6 +38,7 @@ export const getProducts = async (req, res) => {
         : null,
     });
   } catch (error) {
+    req.logger.error(error);
     return res.status(400).send({ status: error.name, message: error.message });
   }
 };
@@ -62,6 +63,7 @@ export const getProductByID = async (req, res) => {
 
     return res.status(200).send({ payload: product });
   } catch (error) {
+    req.logger.error(error);
     return res.status(400).send({ status: error.name, message: error.message });
   }
 };
@@ -112,6 +114,7 @@ export const addProduct = async (req, res) => {
 
     return res.status(200).send({ payload: addProduct });
   } catch (error) {
+    req.logger.error(error);
     return res.status(400).send({ status: error.name, message: error.message });
   }
 };
@@ -156,6 +159,7 @@ export const updateProduct = async (req, res) => {
 
     return res.status(200).send({ payload: updateProduct });
   } catch (error) {
+    req.logger.error(error);
     return res.status(400).send({ status: error.name, message: error.message });
   }
 };
@@ -180,6 +184,7 @@ export const deleteProduct = async (req, res) => {
 
     return res.status(200).send({ payload: deleteProduct });
   } catch (error) {
+    req.logger.error(error);
     return res.status(400).send({ status: error.name, message: error.message });
   }
 };
