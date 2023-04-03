@@ -9,7 +9,7 @@ export const createCart = async (req, res) => {
       message: "Carrito creado"
     });
   } catch (error) {
-    return res.static(400).send({ status: error.name, message: error.message });
+    return res.status(400).send({ status: error.name, message: error.message });
   }
 };
 
