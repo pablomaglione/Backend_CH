@@ -80,6 +80,7 @@ export const addProduct = async (req, res) => {
       stock,
       category,
     } = req.body;
+    const user = req.session.user;
 
     if (
       !title ||
@@ -104,7 +105,7 @@ export const addProduct = async (req, res) => {
       status,
       stock,
       category,
-    });
+    }, user);
 
     if (!addProduct) {
       CustomError.createError({
@@ -167,6 +168,7 @@ export const updateProduct = async (req, res) => {
 export const deleteProduct = async (req, res) => {
   try {
     const { id: paramId } = req.params;
+    const user = req.session.user;
 
     const id = Number(paramId);
 
@@ -174,7 +176,7 @@ export const deleteProduct = async (req, res) => {
       return res.status(401).send({ status: error.name, message: error.message });
     }
 
-    const deleteProduct = await ProductServices.deleteProduct(id);
+    const deleteProduct = await ProductServices.deleteProduct(id, user);
 
     if (!deleteProduct) {
       CustomError.createError({

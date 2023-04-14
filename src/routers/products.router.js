@@ -14,10 +14,10 @@ router.get("/", getProducts);
 
 router.get("/:id", getProductByID);
 
-router.post("/", Auth("admin"), addProduct);
+router.post("/", Auth("admin", "premium"), addProduct);
 
 router.put("/:id", Auth("admin"), updateProduct);
 
-router.delete("/:id", Auth("admin"), deleteProduct);
+router.delete("/:id", Auth("admin", "premium"), deleteProduct);
 
 export { router as productsRouter };

@@ -1,13 +1,19 @@
 import { Router } from "express";
 import passport from "passport";
 import {
+  changeUserRole,
+  getAllUsers,
   getCurrentUser,
   getGithubCallback,
   getLogin,
   getLogout,
   getRegister,
+  getRestore,
+  getRestoreForm,
   postCreate,
   postLogin,
+  postRestore,
+  postRestoreForm,
 } from "../controllers/users.controller.js";
 
 const routerSession = Router();
@@ -60,7 +66,7 @@ routerSession.get("/current", getCurrentUser);
 routerSession.get(
   "/login-github",
   passport.authenticate("github", { scope: ["user:email"] }),
-  async (req, res) => {}
+  async (req, res) => { }
 );
 
 routerSession.get(
@@ -68,5 +74,17 @@ routerSession.get(
   passport.authenticate("github", { failureRedirect: "/login" }),
   getGithubCallback
 );
+
+routerSession.get("/restore", getRestore);
+
+routerSession.post("/restore", postRestore);
+
+routerSession.get("/restoreForm/:uid/:token", getRestoreForm);
+
+routerSession.post("/restoreForm/:uid/:token", postRestoreForm);
+
+routerSession.get("/", getAllUsers);
+
+routerSession.get("/premium/:uid", changeUserRole);
 
 export { routerSession as sessionRouter };

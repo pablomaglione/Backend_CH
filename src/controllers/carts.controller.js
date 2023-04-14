@@ -67,6 +67,7 @@ export const getCartByID = async (req, res) => {
 export const addProductCart = async (req, res) => {
   try {
     const { cid: cartId } = req.params;
+    const user = req.session.user;
 
     const cid = Number(cartId);
 
@@ -88,7 +89,7 @@ export const addProductCart = async (req, res) => {
       });
     }
 
-    const productAddedCart = await CartServices.addProductCart(cid, pid);
+    const productAddedCart = await CartServices.addProductCart(cid, pid, user);
 
     if(!productAddedCart){
       CustomError.createError({

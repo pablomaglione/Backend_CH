@@ -1,3 +1,4 @@
+import CustomError from "../errors/customError.js"
 import cartModel from "../models/carts.model.js";
 import userModel from "../models/user.model.js";
 import ticketModel from "../models/ticket.model.js";
@@ -51,10 +52,21 @@ class CartsServices {
     }
   };
 
-  addProductCart = async (cid, pid) => {
+  addProductCart = async (cid, pid, user) => {
     try {
       const cart = await this.getCartByID(cid);
       if (!cart) throw new Error("Carrito no encontrado");
+
+      const product = await cartModel.findById({ _id: pid}).lean().exec();
+
+      if(!product) throw new Error("Producto No encontrado");
+
+      if(product.owner == user._id){
+        CustomError.createError({
+          name: "Error al agregar producto al carrito",
+          message: "No se puede agregar un producto propio"
+        });
+      }
 
       const productInCart = await cartModel.findOne({ "product.id": pid });
 

@@ -1,3 +1,4 @@
+import { Error } from "mongoose";
 import productModel from "../models/products.model.js";
 
 class ProductsServices {
@@ -43,7 +44,8 @@ class ProductsServices {
     code,
     status,
     stock,
-    category
+    category,
+    user,
   ) => {
     try {
       if (
@@ -76,7 +78,7 @@ class ProductsServices {
         };
       }
 
-      const product = await productModel.create(newProduct);
+      const product = await productModel.create({newProduct, owner: user._id});
 
       if (!product) {
         return { error: "No se pudo agregar el producto a la BD" };
@@ -97,11 +99,22 @@ class ProductsServices {
     }
   };
 
-  deleteProduct = async (productid) => {
+  deleteProduct = async (productid, user) => {
     try {
-      const product = await productModel.deleteOne({ _id: productid });
 
-      return product;
+      const product = await this.getProductsByID(productid);
+
+      if(product.owner !== "admin" && product.owner !== user._id){
+        throw new Error ("No Autorizado")
+      }
+
+      if(!product){
+        throw new Error ("Producto no encontrado")
+      }
+      
+      const delProduct = await productModel.deleteOne({ _id: productid });
+
+      return delProduct;
     } catch (error) {
       console.log(error);
     }
