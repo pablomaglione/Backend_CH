@@ -21,6 +21,7 @@ import { productsMockRouter } from "./routers/productsMock.router.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
 import {loggerRouter} from "./routers/logger.router.js"
 import { addLogger } from "./utils/logger.js";
+import swaggerConfig from "./utils/swagger.js"
 
 dotenv.config();
 
@@ -48,6 +49,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(errorHandler);
 app.use(addLogger);
+app.use("/apidocs", swaggerConfig.serve, swaggerConfig.setup);
 
 
 app.use("/sessions", sessionRouter)
