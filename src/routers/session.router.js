@@ -11,6 +11,7 @@ import {
   changeUserRole,
   uploadDocument,
 } from "../controllers/users.controller.js";
+import upload from "../utils/multer.js";
 
 const routerSession = Router();
 
